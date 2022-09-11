@@ -36,12 +36,12 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         let team_2_score: u8 = v[3].parse().unwrap();
         
         //Taking advantage of entry check and insert_with key, so can modify and add values without changing owner of values
-        let mut team1 = scores.entry(team_1_name.clone()).or_insert_with_key(|t_name| Team{name: t_name.to_string(), goals_scored: 0, goals_conceded: 0});
+        let mut team1 = scores.entry(team_1_name).or_insert_with_key(|t_name| Team{name: t_name.to_string(), goals_scored: 0, goals_conceded: 0});
         team1.goals_scored += team_1_score;
         team1.goals_conceded += team_2_score;
 
         // Similar logic as for team1
-        let mut team2 = scores.entry(team_2_name.clone()).or_insert_with_key(|t_name| Team{name: t_name.to_string(), goals_scored: 0, goals_conceded: 0});
+        let mut team2 = scores.entry(team_2_name).or_insert_with_key(|t_name| Team{name: t_name.to_string(), goals_scored: 0, goals_conceded: 0});
         team2.goals_scored += team_2_score;
         team2.goals_conceded += team_1_score;
 
