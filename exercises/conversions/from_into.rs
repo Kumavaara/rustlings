@@ -35,12 +35,40 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of Person
 // Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
 
-impl From<&str> for Person {
-    fn from(s: &str) -> Person {
+impl From<&str> for Person 
+{
+    fn from(s: &str) -> Person 
+    {
+
+        // Check data found
+        if s.len()> 0 
+        {
+            // Check data name and age data can be split from string
+            // Both data must be found
+            if let Some((name, age_string)) = s.split_once(',') 
+            {
+                // If name not found, make person default
+                if name.is_empty() 
+                {
+                    return Person::default();
+                }
+                // Check age found and it can be parsed into usize
+                if let Ok(age) = age_string.parse::<usize>() 
+                {
+                    return Person 
+                    {
+                        name: String::from(name),
+                        age,
+                    };
+                }
+            }
+        }
+        // If no data found, return default person
+        Person::default()        
     }
 }
+
 
 fn main() {
     // Use the `from` function

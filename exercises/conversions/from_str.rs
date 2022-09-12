@@ -28,7 +28,7 @@ enum ParsePersonError {
     ParseInt(ParseIntError),
 }
 
-// I AM NOT DONE
+
 
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
@@ -45,9 +45,65 @@ enum ParsePersonError {
 
 impl FromStr for Person {
     type Err = ParsePersonError;
-    fn from_str(s: &str) -> Result<Person, Self::Err> {
-    }
+    fn from_str(s: &str) -> Result<Person, Self::Err> 
+    {   
+        // Check data found
+        if s.is_empty()
+        {
+            return Err(Self::Err::Empty);
+        }
+
+        let mut data_iter = s.split(',');
+        
+        // Check name is given, otherwise noName error
+        let name = {
+            if let Some(name) = data_iter.next(){
+                if name.is_empty() {
+                    return Err(Self::Err::NoName);
+                }
+
+                // Transform name into string
+                name.to_string()
+            } else {
+                return Err(Self::Err::NoName)
+            }
+        };
+
+        // Check age is given
+        let age = {
+            if let Some(age) = data_iter.next() 
+            {   
+                // Check parsing works and give error message if failed
+                match age.parse::<usize>() 
+                {
+                    Ok(age) => age, 
+                    Err(e) => return Err(Self::Err::ParseInt(e)),
+                }
+            }
+
+            // If no age, BadLen  
+            else 
+            {
+                return Err(Self::Err::BadLen);
+            }
+        };
+
+        // If extra data is found, bad lenght
+        if data_iter.next().is_some() 
+        {
+            return Err(Self::Err::BadLen);
+        }
+
+        // Format the data to struct
+        Ok(Person 
+        {
+            name,
+            age,
+        })
+        
+    } 
 }
+
 
 fn main() {
     let p = "Mark,20".parse::<Person>().unwrap();
